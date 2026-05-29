@@ -7,7 +7,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Orders
 Route::get('/orders', [OrderController::class, 'index']);
+
 Route::get('/orders/create', [OrderController::class, 'create']);
 Route::post('/orders/store', [OrderController::class, 'store']);
+
 Route::get('/orders-list', [OrderController::class, 'list']);
+
+// Status toggle
+Route::get('/orders/status/{id}', [OrderController::class, 'updateStatus']);
+
+// Delete
+Route::get('/orders/delete/{id}', [OrderController::class, 'delete']);
