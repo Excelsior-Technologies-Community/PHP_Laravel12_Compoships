@@ -12,9 +12,9 @@ class Order extends Model
     protected $fillable = [
         'order_no',
         'store_id',
-        'customer_name'
+        'customer_name',
+        'status' // NEW
     ];
-
     public function items()
     {
         return $this->hasMany(
