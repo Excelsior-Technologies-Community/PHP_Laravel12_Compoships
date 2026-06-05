@@ -65,7 +65,23 @@ class OrderController extends Controller
             ->orderBy('id', 'asc')
             ->paginate(4);
 
-        return view('orders.index', compact('orders', 'search'));
+        // Dashboard Statistics
+        $totalOrders = Order::count();
+
+        $completedOrders = Order::where('status', 'completed')->count();
+
+        $pendingOrders = Order::where('status', 'pending')->count();
+
+        $totalProducts = OrderItem::sum('qty');
+
+        return view('orders.index', compact(
+            'orders',
+            'search',
+            'totalOrders',
+            'completedOrders',
+            'pendingOrders',
+            'totalProducts'
+        ));
     }
 
     // Toggle status
@@ -92,5 +108,57 @@ class OrderController extends Controller
         $order->delete();
 
         return back()->with('success', 'Order deleted successfully');
+    }
+
+    public function show($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        return view('orders.show', compact('order'));
+    }
+
+    public function exportCsv()
+    {
+        $fileName = 'orders_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ];
+
+        $callback = function () {
+
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'Order No',
+                'Store ID',
+                'Customer',
+                'Status',
+                'Product',
+                'Quantity'
+            ]);
+
+            $orders = Order::with('items')->get();
+
+            foreach ($orders as $order) {
+
+                foreach ($order->items as $item) {
+
+                    fputcsv($file, [
+                        $order->order_no,
+                        $order->store_id,
+                        $order->customer_name,
+                        $order->status,
+                        $item->product_name,
+                        $item->qty
+                    ]);
+                }
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
