@@ -132,7 +132,12 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand">⚡ Laravel 12 Compoships</a>
-        <a href="{{ url('/orders-list') }}" class="btn btn-outline-light btn-sm">View Orders</a>
+        <div class="d-flex gap-2">
+            <a href="{{ url('/orders-list') }}" class="btn btn-outline-light btn-sm">Orders</a>
+            <a href="{{ url('/dashboard') }}" class="btn btn-outline-light btn-sm">Dashboard</a>
+            <a href="{{ url('/stores') }}" class="btn btn-outline-light btn-sm">Stores</a>
+            <a href="{{ url('/orders/trashed') }}" class="btn btn-outline-light btn-sm">Trash</a>
+        </div>
     </div>
 </nav>
 

@@ -2,18 +2,27 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\Store;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
-{
-    $this->call(OrderSeeder::class);
-}
+    {
+        // Composite-key demo: stores + products
+        $stores = Store::factory()->count(3)->create();
 
+        foreach ($stores as $store) {
+            Product::factory()->forStore($store)->count(3)->create();
+        }
+
+        // Orders + items (Compoships relationship)
+        Order::factory()->count(15)->create()->each(function ($order) {
+            $count = rand(1, 4);
+            OrderItem::factory()->forOrder($order)->count($count)->create();
+        });
+    }
 }

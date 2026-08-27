@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Awobaz\Compoships\Compoships;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OrderItem extends Model
 {
-    use Compoships;
+    use Compoships, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'order_no',
         'store_id',
         'product_name',
-        'qty'
+        'qty',
     ];
 
     public function order()

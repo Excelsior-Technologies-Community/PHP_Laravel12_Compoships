@@ -103,6 +103,11 @@
         color: white;
     }
 
+    .btn-edit {
+        background: #0891b2;
+        color: white;
+    }
+
     .btn-status {
         background: #2563eb;
         color: white;
@@ -191,7 +196,17 @@
             ⚡ Orders Dashboard
         </div>
 
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 flex-wrap">
+
+            <a href="{{ url('/dashboard') }}"
+                class="btn btn-info btn-sm text-white">
+                📊 Dashboard
+            </a>
+
+            <a href="{{ url('/orders/trashed') }}"
+                class="btn btn-warning btn-sm">
+                🗑️ Trash
+            </a>
 
             <a href="{{ url('/orders/export/csv') }}"
                 class="btn btn-success">
@@ -221,19 +236,29 @@
 
             <div class="row g-2">
 
-                <div class="col-md-8">
+                <div class="col-md-5">
                     <input type="text" name="search" class="form-control"
                         placeholder="Search by Order No or Customer Name..." value="{{ request('search') }}">
                 </div>
 
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">
-                        Search
+                <div class="col-md-3">
+                    <input type="date" name="date_from" class="form-control"
+                        value="{{ request('date_from') }}" title="From date">
+                </div>
+
+                <div class="col-md-3">
+                    <input type="date" name="date_to" class="form-control"
+                        value="{{ request('date_to') }}" title="To date">
+                </div>
+
+                <div class="col-md-1 d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        🔍
                     </button>
                 </div>
 
-                <div class="col-md-2">
-                    <a href="{{ url('/orders-list') }}" class="btn btn-dark w-100">
+                <div class="col-12 mt-2">
+                    <a href="{{ url('/orders-list') }}" class="btn btn-dark btn-sm">
                         Reset
                     </a>
                 </div>
@@ -274,6 +299,14 @@
                 {{ $order->customer_name }}
             </div>
 
+            <div class="order-info">
+                <span class="label">Items:</span>
+                {{ $order->total_items }}
+                &nbsp;|&nbsp;
+                <span class="label">Qty:</span>
+                {{ $order->total_qty }}
+            </div>
+
             {{-- STATUS --}}
             <div>
                 <span class="status {{ $order->status }}">
@@ -289,6 +322,11 @@
             {{-- STATUS BUTTON --}}
             <a href="{{ url('/orders/status/' . $order->id) }}" class="btn-small btn-status">
                 Change Status
+            </a>
+
+            {{-- EDIT BUTTON --}}
+            <a href="{{ url('/orders/edit/' . $order->id) }}" class="btn-small btn-edit">
+                Edit
             </a>
 
             {{-- SHOW BUTTON --}}
